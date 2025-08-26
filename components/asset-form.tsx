@@ -44,7 +44,7 @@ export function AssetForm({ asset }: AssetFormProps) {
     assigned_to: asset?.assigned_to || "none",
     status: asset?.status || "available",
     purchase_date: asset?.purchase_date || "",
-    purchase_price: asset?.purchase_price?.toString() || "",
+    purchase_cost: asset?.purchase_cost?.toString() || "",
     warranty_expiry: asset?.warranty_expiry || "",
     location: asset?.location || "",
     notes: asset?.notes || "",
@@ -104,7 +104,7 @@ export function AssetForm({ asset }: AssetFormProps) {
         assigned_to: formData.assigned_to === "none" ? null : formData.assigned_to,
         status: formData.status as Asset["status"],
         purchase_date: formData.purchase_date || null,
-        purchase_price: formData.purchase_price ? Number.parseFloat(formData.purchase_price) : null,
+        purchase_cost: formData.purchase_cost ? Number.parseFloat(formData.purchase_cost) : null,
         warranty_expiry: formData.warranty_expiry || null,
         location: formData.location || null,
         notes: formData.notes || null,
@@ -344,13 +344,13 @@ export function AssetForm({ asset }: AssetFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="purchase_price">Purchase Price</Label>
+              <Label htmlFor="purchase_cost">Purchase Cost</Label>
               <Input
-                id="purchase_price"
+                id="purchase_cost"
                 type="number"
                 step="0.01"
-                value={formData.purchase_price}
-                onChange={(e) => setFormData({ ...formData, purchase_price: e.target.value })}
+                value={formData.purchase_cost}
+                onChange={(e) => setFormData({ ...formData, purchase_cost: e.target.value })}
               />
             </div>
 
