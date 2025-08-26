@@ -12,7 +12,7 @@ export interface AuditLogData {
 export interface LogAuditEventParams {
   asset_id: string
   action: string
-  details: string
+  notes: string
   performed_by: string
   old_values?: Record<string, any>
   new_values?: Record<string, any>
@@ -146,7 +146,7 @@ export async function logAuditEvent(params: LogAuditEventParams) {
     .insert({
       asset_id: params.asset_id,
       action: params.action,
-      details: params.details,
+      notes: params.notes,
       performed_by: params.performed_by,
       old_values: params.old_values || null,
       new_values: params.new_values || null,
