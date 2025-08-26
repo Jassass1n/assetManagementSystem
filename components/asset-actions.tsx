@@ -23,7 +23,7 @@ import { UserCheck, UserX, Settings } from "lucide-react"
 
 interface AssetActionsProps {
   asset: Asset
-  currentUser: Profile
+  currentUser: Profile | null
   employees: Profile[]
   onAssetUpdated: () => void
 }
@@ -44,7 +44,15 @@ export function AssetActions({ asset, currentUser, employees, onAssetUpdated }: 
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
-  const canManageAssets = ["admin", "it_staff"].includes(currentUser.role)
+  const canManageAssets = currentUser ? ["admin", "it_staff"].includes(currentUser.role) : false
+
+  if (!currentUser) {
+    return (
+      <div className="flex items-center gap-2">
+        <Badge className={statusColors[asset.status]}>{asset.status.replace("_", " ")}</Badge>
+      </div>
+    )
+  }
 
   const handleAssignAsset = async () => {
     if (!selectedEmployee || !canManageAssets) return
