@@ -60,6 +60,11 @@ export function UserManagement() {
 
     if (error) {
       console.error("Error fetching users:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch users. Please try again.",
+        variant: "destructive",
+      })
     } else {
       setUsers(data || [])
     }
@@ -85,7 +90,7 @@ export function UserManagement() {
           first_name: editingUser.first_name,
           last_name: editingUser.last_name,
           role: editingUser.role,
-          department: editingUser.department?.id || null,
+          department_id: editingUser.department?.id || null,
         })
         .eq("id", editingUser.id)
 
@@ -265,7 +270,7 @@ export function UserManagement() {
                             <div>
                               <Label htmlFor="department">Department</Label>
                               <Select
-                                value={editingUser.department?.id || ""}
+                                value={editingUser.department?.id || "none"}
                                 onValueChange={(value) => {
                                   const dept = departments.find((d) => d.id === value)
                                   setEditingUser({ ...editingUser, department: dept })
@@ -275,7 +280,7 @@ export function UserManagement() {
                                   <SelectValue placeholder="Select department" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="">No Department</SelectItem>
+                                  <SelectItem value="none">No Department</SelectItem>
                                   {departments.map((dept) => (
                                     <SelectItem key={dept.id} value={dept.id}>
                                       {dept.name}
