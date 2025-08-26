@@ -13,6 +13,10 @@ interface DepartmentPageProps {
 }
 
 export default async function DepartmentPage({ params }: DepartmentPageProps) {
+  if (params.id === "new") {
+    redirect("/dashboard/departments/new")
+  }
+
   const supabase = await createClient()
 
   const {
