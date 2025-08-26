@@ -10,6 +10,10 @@ interface AssetPageProps {
 }
 
 export default async function AssetPage({ params }: AssetPageProps) {
+  if (params.id === "new") {
+    redirect("/dashboard/assets/new")
+  }
+
   const supabase = await createClient()
 
   const {
