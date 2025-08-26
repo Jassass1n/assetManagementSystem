@@ -9,6 +9,15 @@ export interface AuditLogData {
   notes?: string
 }
 
+export interface LogAuditEventParams {
+  asset_id: string
+  action: string
+  details: string
+  performed_by: string
+  old_values?: Record<string, any>
+  new_values?: Record<string, any>
+}
+
 export class AuditLogger {
   private supabase = createClient()
 
@@ -130,3 +139,23 @@ export class AuditLogger {
 
 // Singleton instance
 export const auditLogger = new AuditLogger()
+
+export async function logAuditEvent(params: LogAuditEventParams) {
+  const { data, error } = await createClient()
+    .from("audit_logs")
+    .insert({
+      asset_id: params.asset_id,
+      action: params.action,
+      details: params.details,
+      performed_by: params.performed_by,
+      old_values: params.old_values || null,
+      new_values: params.new_values || null,
+    })
+
+  if (error) {
+    console.error("Failed to create audit log:", error)
+    throw error
+  }
+
+  return data
+}
