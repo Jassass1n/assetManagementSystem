@@ -58,31 +58,36 @@ export function AssetDetails({ asset, userProfile }: AssetDetailsProps) {
 
   const canEdit = userProfile.role === "admin" || userProfile.role === "it_staff"
 
-  const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this asset? This action cannot be undone.")) return
-    setDeleting(true)
+const handleDelete = async () => {
+  if (!confirm("Are you sure you want to delete this asset?")) return
+  setDeleting(true)
 
-    const supabase = createClient()
+  const supabase = createClient()
 
-    // Delete asset
-    const { error } = await supabase.from("assets").delete().eq("id", asset.id)
+  // Log deletion BEFORE deleting
+  await supabase.from("audit_logs").insert({
+    asset_id: asset.id,
+    action: "deleted",
+    performer_id: userProfile.id,
+  })
 
-    if (error) {
-      alert("Failed to delete asset: " + error.message)
-      setDeleting(false)
-      return
-    }
-
-    // Add audit log
-    await supabase.from("audit_logs").insert({
-      asset_id: asset.id,
-      action: "deleted",
-      performer_id: userProfile.id,
+  // Soft delete: mark as retired instead of removing
+  const { error } = await supabase
+    .from("assets")
+    .update({
+      deleted_at: new Date().toISOString(),
+      status: "retired"
     })
+    .eq("id", asset.id)
 
-    // Redirect to assets list
-    router.push("/assets")
+  if (error) {
+    alert("Failed to delete asset: " + error.message)
+    setDeleting(false)
+    return
   }
+
+  router.push("/assets")
+}
 
   return (
     <div className="space-y-6">
