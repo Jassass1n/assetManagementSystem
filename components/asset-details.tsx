@@ -84,7 +84,7 @@ const handleDelete = async () => {
   }
 
   // ✅ Redirect to asset listing
-  router.push("/assets")
+  router.push("/dashboard/assets")
   router.refresh?.() // In Next.js 13+ App Router
 }
 
