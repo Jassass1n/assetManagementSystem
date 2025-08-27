@@ -64,20 +64,17 @@ const handleDelete = async () => {
 
   const supabase = createClient()
 
-  // Log deletion BEFORE deleting
+  // Log deletion
   await supabase.from("audit_logs").insert({
     asset_id: asset.id,
     action: "deleted",
     performer_id: userProfile.id,
   })
 
-  // Soft delete: mark as retired instead of removing
+  // Soft delete (mark deleted_at + retired)
   const { error } = await supabase
     .from("assets")
-    .update({
-      deleted_at: new Date().toISOString(),
-      status: "retired"
-    })
+    .update({ deleted_at: new Date().toISOString(), status: "retired" })
     .eq("id", asset.id)
 
   if (error) {
@@ -86,7 +83,9 @@ const handleDelete = async () => {
     return
   }
 
+  // ✅ Redirect to asset listing
   router.push("/assets")
+  router.refresh?.() // In Next.js 13+ App Router
 }
 
   return (
